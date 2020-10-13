@@ -207,14 +207,40 @@ export function ReportSettings(props: ReportSettingProps) {
       'write' | 'preview'
     >('write');
 
+    // This removes all HTML tags, plus innerHTML if tag is 'script' or 'style'
+    const sanitizeInput = (input: string) => {
+      const tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
+      const tagOrComment = new RegExp(
+        '<(?:'
+        // Comment body.
+        + '!--(?:(?:-*[^->])*--+|-?)'
+        // Special "raw text" elements whose content should be elided.
+        + '|script\\b' + tagBody + '>[\\s\\S]*?</script\\s*'
+        + '|style\\b' + tagBody + '>[\\s\\S]*?</style\\s*'
+        // Regular name
+        + '|/?[a-z]'
+        + tagBody
+        + ')>',
+        'gi');
+      function removeTags(html: string) {
+        let oldHtml;
+        do {
+          oldHtml = html;
+          html = html.replace(tagOrComment, '');
+        } while (html !== oldHtml);
+        return html.replace(/</g, '&lt;');
+      }
+      return removeTags(input)
+    };
+
     const handleHeader = (e) => {
       setHeader(e);
-      reportDefinitionRequest.report_params.core_params.header = e;
+      reportDefinitionRequest.report_params.core_params.header = sanitizeInput(e);
     };
 
     const handleFooter = (e) => {
       setFooter(e);
-      reportDefinitionRequest.report_params.core_params.footer = e;
+      reportDefinitionRequest.report_params.core_params.footer = sanitizeInput(e);
     };
 
     const handleCheckboxHeaderFooter = (optionId) => {
