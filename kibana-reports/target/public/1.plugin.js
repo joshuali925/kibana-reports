@@ -731,7 +731,6 @@ function ReportDefinitionDetails(props) {
   };
 
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    handleErrorChangingScheduleStatusToast('permissions');
     const {
       httpClient
     } = props;

@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-import puppeteer, { SetCookie } from 'puppeteer';
+import puppeteer, { SetCookie } from 'puppeteer-core';
 import createDOMPurify from 'dompurify';
 import { JSDOM } from 'jsdom';
 import { Logger } from '../../../../../src/core/server';
@@ -23,6 +23,7 @@ import {
   REPORT_TYPE,
   FORMAT,
   SELECTOR,
+  CHROMIUM_PATH,
 } from './constants';
 import { getFileName } from './helpers';
 import { CreateReportResultType } from './types';
@@ -67,6 +68,7 @@ export const createVisualReport = async (
      * https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#setting-up-chrome-linux-sandbox
      */
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath: CHROMIUM_PATH,
   });
   const page = await browser.newPage();
   page.setDefaultNavigationTimeout(0);

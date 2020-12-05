@@ -78,3 +78,5 @@ export const DEFAULT_REPORT_HEADER = '<h1>Open Distro Kibana Reports</h1>';
 export const DEFAULT_REPORT_FOOTER = '<h1>Open Distro Kibana Reports</h1>';
 
 export const SECURITY_AUTH_COOKIE_NAME = 'security_authentication';
+
+export const CHROMIUM_PATH = `${__dirname}/../../../.chromium/headless_shell`;

@@ -8,6 +8,7 @@
     ".yarnrc",
     "index.js",
     "{lib,public,server,webpackShims,translations,utils,models,test,common,target}/**/*",
-    "!__tests__"
+    "!__tests__",
+    ".chromium/**/*"
   ]
 }
