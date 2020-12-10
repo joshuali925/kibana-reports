@@ -27,6 +27,7 @@ import org.elasticsearch.rest.RestStatus
  * Base response which give REST status.
  */
 internal abstract class BaseResponse : ActionResponse(), ToXContentObject {
+    // TODO all request needs request/response inherit baseresponse
 
     /**
      * {@inheritDoc}

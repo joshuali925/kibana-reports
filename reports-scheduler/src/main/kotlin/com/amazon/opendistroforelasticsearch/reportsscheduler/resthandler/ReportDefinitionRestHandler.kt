@@ -102,6 +102,7 @@ internal class ReportDefinitionRestHandler : BaseRestHandler() {
     /**
      * {@inheritDoc}
      */
+    // Actual request
     override fun prepareRequest(request: RestRequest, client: NodeClient): RestChannelConsumer {
         return when (request.method()) {
             POST -> RestChannelConsumer {

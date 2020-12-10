@@ -70,6 +70,7 @@ import java.util.function.Supplier
  * Entry point of the OpenDistro for Elasticsearch Reports scheduler plugin.
  * This class initializes the rest handlers.
  */
+// TODO rename
 class ReportsSchedulerPlugin : Plugin(), ActionPlugin, JobSchedulerExtension {
 
     companion object {
@@ -102,38 +103,39 @@ class ReportsSchedulerPlugin : Plugin(), ActionPlugin, JobSchedulerExtension {
         repositoriesServiceSupplier: Supplier<RepositoriesService>
     ): Collection<Any> {
         PluginSettings.addSettingsUpdateConsumer(clusterService)
+        // TODO initialize only one
         ReportDefinitionsIndex.initialize(client, clusterService)
         ReportInstancesIndex.initialize(client, clusterService)
         return emptyList()
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun getJobType(): String {
-        return "reports-scheduler"
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun getJobIndex(): String {
-        return REPORT_DEFINITIONS_INDEX_NAME
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun getJobRunner(): ScheduledJobRunner {
-        return ReportDefinitionJobRunner
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    override fun getJobParser(): ScheduledJobParser {
-        return ReportDefinitionJobParser
-    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    override fun getJobType(): String {
+//        return "reports-scheduler"
+//    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    override fun getJobIndex(): String {
+//        return REPORT_DEFINITIONS_INDEX_NAME
+//    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    override fun getJobRunner(): ScheduledJobRunner {
+//        return ReportDefinitionJobRunner
+//    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    override fun getJobParser(): ScheduledJobParser {
+//        return ReportDefinitionJobParser
+//    }
 
     /**
      * {@inheritDoc}
@@ -150,10 +152,10 @@ class ReportsSchedulerPlugin : Plugin(), ActionPlugin, JobSchedulerExtension {
         return listOf(
             ReportDefinitionRestHandler(),
             ReportDefinitionListRestHandler(),
-            ReportInstanceRestHandler(),
-            ReportInstanceListRestHandler(),
-            OnDemandReportRestHandler(),
-            ReportInstancePollRestHandler()
+//            ReportInstanceRestHandler(),
+//            ReportInstanceListRestHandler(),
+//            OnDemandReportRestHandler(),
+//            ReportInstancePollRestHandler()
         )
     }
 
@@ -161,6 +163,8 @@ class ReportsSchedulerPlugin : Plugin(), ActionPlugin, JobSchedulerExtension {
      * {@inheritDoc}
      */
     override fun getActions(): List<ActionPlugin.ActionHandler<out ActionRequest, out ActionResponse>> {
+        // TODO keep report definition
+        // remove scheduler dir, action keep base and report definition
         return listOf(
             ActionPlugin.ActionHandler(CreateReportDefinitionAction.ACTION_TYPE, CreateReportDefinitionAction::class.java),
             ActionPlugin.ActionHandler(DeleteReportDefinitionAction.ACTION_TYPE, DeleteReportDefinitionAction::class.java),

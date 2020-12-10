@@ -54,6 +54,7 @@ internal class InContextReportCreateResponse : BaseResponse {
         this.filterSensitiveInfo = filterSensitiveInfo
     }
 
+    // TODO json here
     @Throws(IOException::class)
     constructor(input: StreamInput) : this(input.createJsonParser())
 

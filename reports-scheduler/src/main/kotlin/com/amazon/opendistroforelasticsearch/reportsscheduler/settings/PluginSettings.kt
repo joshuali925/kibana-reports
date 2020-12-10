@@ -32,6 +32,7 @@ import java.nio.file.Path
  * settings specific to reports scheduler Plugin.
  */
 internal object PluginSettings {
+    // reports-scheduler.yml
 
     /**
      * Settings Key prefix for this plugin.
@@ -81,7 +82,7 @@ internal object PluginSettings {
     /**
      * Setting to choose default number of items to query.
      */
-    private const val DEFAULT_ITEMS_QUERY_COUNT_KEY = "$POLLING_KEY_PREFIX.defaultItemsQueryCount"
+    private const val DEFAULT_ITEMS_QUERY_COUNT_KEY = "$GENERAL_KEY_PREFIX.defaultItemsQueryCount"
 
     /**
      * Setting to choose admin access restriction.
@@ -355,6 +356,7 @@ internal object PluginSettings {
      *
      * @return list of settings defined in this plugin
      */
+    // TODO settings here
     fun getAllSettings(): List<Setting<*>> {
         return listOf(OPERATION_TIMEOUT_MS,
             JOB_LOCK_DURATION_S,

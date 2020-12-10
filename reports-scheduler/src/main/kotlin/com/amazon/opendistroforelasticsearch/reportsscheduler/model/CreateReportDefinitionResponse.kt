@@ -41,6 +41,7 @@ internal class CreateReportDefinitionResponse(
     val reportDefinitionId: String
 ) : BaseResponse() {
 
+    // TODO seralize
     @Throws(IOException::class)
     constructor(input: StreamInput) : this(
         reportDefinitionId = input.readString()
