@@ -31,6 +31,7 @@ import {
 import registerRoutes from './routes';
 import { pollAndExecuteJob } from './executor/executor';
 import { POLL_INTERVAL } from './utils/constants';
+import { Mutex } from './utils/mutex';
 
 export interface ReportsPluginRequestContext {
   logger: Logger;
@@ -50,9 +51,11 @@ export class OpendistroKibanaReportsPlugin
       OpendistroKibanaReportsPluginStart
     > {
   private readonly logger: Logger;
+  private readonly mutex: Mutex;
 
   constructor(initializerContext: PluginInitializerContext) {
     this.logger = initializerContext.logger.get();
+    this.mutex = new Mutex();
   }
 
   public setup(core: CoreSetup) {
@@ -83,6 +86,7 @@ export class OpendistroKibanaReportsPlugin
       (context, request) => {
         return {
           logger: this.logger,
+          mutex: this.mutex,
           notificationClient,
           esReportsClient,
         };
