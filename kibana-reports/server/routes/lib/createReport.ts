@@ -35,6 +35,7 @@ import { SetCookie } from 'puppeteer-core';
 import { deliverReport } from './deliverReport';
 import { updateReportState } from './updateReportState';
 import { saveReport } from './saveReport';
+import { getRunningChromiums } from '../../utils/processHelper';
 
 export const createReport = async (
   request: KibanaRequest,
@@ -85,6 +86,13 @@ export const createReport = async (
       );
     } else {
       // report source can only be one of [saved search, visualization, dashboard]
+
+      // return error if running instances of chromium is large
+      const numChromiums = await getRunningChromiums();
+      if (numChromiums >= 1) {
+        throw new Error('Server busy');
+      }
+
       // compose url
       const completeQueryUrl = `${LOCAL_HOST}${report.query_url}`;
       // Check if security is enabled. TODO: is there a better way to check?
