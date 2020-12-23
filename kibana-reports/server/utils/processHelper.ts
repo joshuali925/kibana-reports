@@ -16,9 +16,11 @@
 import psList from 'ps-list';
 
 export async function getRunningChromiums(): Promise<number> {
-  const chromiums = await psList().then((processes) =>
-    processes.filter((process) => process.name.includes('Chromium'))
-  );
+  const chromiums = await psList({ all: true }).then((processes) => {
+    return processes.filter((process) =>
+      process.name.includes('headless_shell')
+    );
+  });
 
   return chromiums.length;
 }
