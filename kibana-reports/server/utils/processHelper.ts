@@ -13,14 +13,27 @@
  * permissions and limitations under the License.
  */
 
-import psList from 'ps-list';
+import ps from 'ps-node';
 
-export async function getRunningChromiums(): Promise<number> {
-  const chromiums = await psList({ all: true }).then((processes) => {
-    return processes.filter((process) =>
-      process.name.includes('headless_shell')
+function psLookup(regex: RegExp) {
+  return new Promise<number>((resolve) => {
+    ps.lookup(
+      {
+        command: regex,
+        psargs: 'ux',
+      },
+      function (err, resultList) {
+        if (err) {
+          throw new Error(err.message);
+        }
+        resolve(resultList.length);
+      }
     );
   });
+}
 
-  return chromiums.length;
+export async function getRunningChromiums(): Promise<number> {
+  const result = await psLookup(/Chromium|headless_shell/);
+  console.log('result', result);
+  return result;
 }
