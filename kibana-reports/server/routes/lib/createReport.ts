@@ -87,10 +87,12 @@ export const createReport = async (
     } else {
       // report source can only be one of [saved search, visualization, dashboard]
 
-      // return error if running instances of chromium is large
+      // return error if number of running chromiums is over limit
       const numChromiums = await getNumberOfRunningChromiums();
       if (numChromiums >= 1) {
-        throw new Error('Server busy');
+        const error = new Error('Server busy');
+        error.statusCode = 503;
+        throw error;
       }
 
       // compose url
