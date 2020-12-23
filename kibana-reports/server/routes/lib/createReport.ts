@@ -36,6 +36,7 @@ import { deliverReport } from './deliverReport';
 import { updateReportState } from './updateReportState';
 import { saveReport } from './saveReport';
 import { getNumberOfRunningChromiums } from '../../utils/processHelper';
+import { MAX_CHROMIUM_INSTANCES } from '../../utils/constants';
 
 export const createReport = async (
   request: KibanaRequest,
@@ -55,6 +56,8 @@ export const createReport = async (
     request
   );
   const esClient = context.core.elasticsearch.legacy.client;
+  // @ts-ignore
+  const maxChromiumInstances = context.reporting_plugin.config?.max_chromium_instances ?? MAX_CHROMIUM_INSTANCES;
   // @ts-ignore
   const timezone = request.query.timezone;
 
@@ -89,7 +92,7 @@ export const createReport = async (
 
       // return error if number of running chromiums is over limit
       const numChromiums = await getNumberOfRunningChromiums();
-      if (numChromiums >= 1) {
+      if (numChromiums >= maxChromiumInstances) {
         const error = new Error('Server busy');
         error.statusCode = 503;
         throw error;

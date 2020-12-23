@@ -14,3 +14,4 @@
  */
 
 export const POLL_INTERVAL = 1000 * 60 * 5; // in milliseconds (5 min)
+export const MAX_CHROMIUM_INSTANCES = 2;

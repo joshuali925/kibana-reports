@@ -21,6 +21,8 @@ import {
   Logger,
   ILegacyClusterClient,
 } from '../../../src/core/server';
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { setIntervalAsync } from 'set-interval-async/dynamic';
 import esReportsPlugin from './backend/opendistro-es-reports-plugin';
 import notificationPlugin from './backend/opendistro-notification-plugin';
@@ -31,6 +33,7 @@ import {
 import registerRoutes from './routes';
 import { pollAndExecuteJob } from './executor/executor';
 import { POLL_INTERVAL } from './utils/constants';
+import { OpendistroKibanaReportsPluginConfigType } from 'server';
 
 export interface ReportsPluginRequestContext {
   logger: Logger;
@@ -50,13 +53,20 @@ export class OpendistroKibanaReportsPlugin
       OpendistroKibanaReportsPluginStart
     > {
   private readonly logger: Logger;
+  private readonly config$: Observable<OpendistroKibanaReportsPluginConfigType | undefined>;
 
   constructor(initializerContext: PluginInitializerContext) {
     this.logger = initializerContext.logger.get();
+    this.config$ = initializerContext.config.createIfExists<
+      OpendistroKibanaReportsPluginConfigType
+    >();
   }
 
-  public setup(core: CoreSetup) {
+  public async setup(core: CoreSetup) {
     this.logger.debug('opendistro_kibana_reports: Setup');
+    const config:
+      | OpendistroKibanaReportsPluginConfigType
+      | undefined = await this.config$.pipe(first()).toPromise();
     const router = core.http.createRouter();
     // Deprecated API. Switch to the new elasticsearch client as soon as https://github.com/elastic/kibana/issues/35508 done.
     const esReportsClient: ILegacyClusterClient = core.elasticsearch.legacy.createClient(
@@ -83,6 +93,7 @@ export class OpendistroKibanaReportsPlugin
       (context, request) => {
         return {
           logger: this.logger,
+          config,
           notificationClient,
           esReportsClient,
         };

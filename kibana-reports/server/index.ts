@@ -13,11 +13,31 @@
  * permissions and limitations under the License.
  */
 
-import { PluginInitializerContext } from '../../../src/core/server';
+import { schema, TypeOf } from '@kbn/config-schema';
+import {
+  PluginConfigDescriptor,
+  PluginInitializerContext,
+} from '../../../src/core/server';
 import { OpendistroKibanaReportsPlugin } from './plugin';
+import { MAX_CHROMIUM_INSTANCES } from './utils/constants';
 
 //  This exports static code and TypeScript types,
 //  as well as, Kibana Platform `plugin()` initializer.
+
+const configSchema = schema.object({
+  max_chromium_instances: schema.number({
+    defaultValue: MAX_CHROMIUM_INSTANCES,
+  }),
+});
+
+export type OpendistroKibanaReportsPluginConfigType = TypeOf<
+  typeof configSchema
+>;
+
+export const config: PluginConfigDescriptor<OpendistroKibanaReportsPluginConfigType> = {
+  exposeToBrowser: {},
+  schema: configSchema,
+};
 
 export function plugin(initializerContext: PluginInitializerContext) {
   return new OpendistroKibanaReportsPlugin(initializerContext);
