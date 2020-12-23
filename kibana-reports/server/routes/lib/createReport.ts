@@ -35,7 +35,7 @@ import { SetCookie } from 'puppeteer-core';
 import { deliverReport } from './deliverReport';
 import { updateReportState } from './updateReportState';
 import { saveReport } from './saveReport';
-import { getRunningChromiums } from '../../utils/processHelper';
+import { getNumberOfRunningChromiums } from '../../utils/processHelper';
 
 export const createReport = async (
   request: KibanaRequest,
@@ -88,7 +88,7 @@ export const createReport = async (
       // report source can only be one of [saved search, visualization, dashboard]
 
       // return error if running instances of chromium is large
-      const numChromiums = await getRunningChromiums();
+      const numChromiums = await getNumberOfRunningChromiums();
       if (numChromiums >= 1) {
         throw new Error('Server busy');
       }

@@ -15,25 +15,21 @@
 
 import ps from 'ps-node';
 
-function psLookup(regex: RegExp) {
-  return new Promise<number>((resolve) => {
+function psCount(pattern: RegExp | string) {
+  return new Promise<number>((resolve, reject) => {
     ps.lookup(
       {
-        command: regex,
+        command: pattern,
         psargs: 'ux',
       },
       function (err, resultList) {
-        if (err) {
-          throw new Error(err.message);
-        }
+        if (err) reject(err.message);
         resolve(resultList.length);
       }
     );
   });
 }
 
-export async function getRunningChromiums(): Promise<number> {
-  const result = await psLookup(/Chromium|headless_shell/);
-  console.log('result', result);
-  return result;
+export async function getNumberOfRunningChromiums(): Promise<number> {
+  return await psCount('headless_shell');
 }
