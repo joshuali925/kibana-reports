@@ -13,23 +13,12 @@
  * permissions and limitations under the License.
  */
 
-import ps from 'ps-node';
-
-function psCount(pattern: RegExp | string) {
-  return new Promise<number>((resolve, reject) => {
-    ps.lookup(
-      {
-        command: pattern,
-        psargs: 'ux',
-      },
-      function (err, resultList) {
-        if (err) reject(err.message);
-        resolve(resultList.length);
-      }
-    );
-  });
-}
+import psList from 'ps-list';
 
 export async function getNumberOfRunningChromiums(): Promise<number> {
-  return await psCount('headless_shell');
+  const chromiums = await psList({ all: true }).then((processes) =>
+    processes.filter((process) => process.name.includes('headless_shell'))
+  );
+
+  return chromiums.length;
 }
